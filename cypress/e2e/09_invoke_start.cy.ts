@@ -1,3 +1,5 @@
+import { invoke } from "cypress/types/lodash";
+
 it('invoke', () => {
 
   cy.visit('/board/1')
@@ -5,5 +7,6 @@ it('invoke', () => {
   cy.get('[data-cy="footer-link"]')
     .invoke('removeAttr', 'target')
     .click()
+   
 
 });

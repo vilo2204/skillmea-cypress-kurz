@@ -3,6 +3,9 @@ it('načítanie zoznamu boardov', () => {
   cy.intercept({
     method: 'GET',
     url: '/api/boards'
+  }, {
+      fixture: 'mockData.json'
+    
   })
     .as('boardList')
 
@@ -15,6 +18,9 @@ it('chybová hláška pri vytvorení boardu', () => {
   cy.intercept({
     method: 'POST',
     url: '/api/boards'
+  },{
+   statusCode: 403
+
   })
     .as('boardCreate')
 
@@ -26,17 +32,30 @@ it('chybová hláška pri vytvorení boardu', () => {
   cy.get('[data-cy=new-board-input]')
     .type('garden project{enter}')
 
+  cy.get('[data-cy="notification-message"]')
+    .should('contain.text', 'There was an error creating board')
 
 })
 
-it('pomalé načítavanie', () => {
+it.only('pomalé načítavanie', () => {
 
   cy.intercept({
     method: 'GET',
-    url: '/api/boards'
+    url: '/api/boards',
+    times: 1
+  }, (req) => {
+    req.reply((res) => {
+      res.delay = 10000
+    })
   })
     .as('boards')
 
   cy.visit('/')
+
+  cy.contains('Reload')
+    .click()
+  
+  cy.get('[data-cy=board-item]')
+    .should('be.visible')
 
 });

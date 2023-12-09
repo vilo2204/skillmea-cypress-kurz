@@ -1,7 +1,12 @@
 it('upload a download', () => {
 
-  cy.visit('/board/1?card=1')
+  cy.visit('/board/1?card=4')
 
-  cy.get('[data-cy="upload-image"]')
+       
+
+ cy.contains('Download')
+   .click()
+
+   cy.readFile('cypress/downloads/4_skillmea_logo.svg')
 
 })
